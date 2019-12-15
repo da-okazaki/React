@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import ApolloClient from "apollo-boost";
+import { ApolloProvider } from 'react-apollo';
 import gql from "graphql-tag";
 
 
@@ -44,7 +45,11 @@ const client = new ApolloClient({
     .then(result => console.log(result));
 
     
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+    <ApolloProvider client={client}>
+        <App />, document.getElementById('root')
+    </ApolloProvider>
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
