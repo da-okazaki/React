@@ -1,68 +1,104 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![](https://github.com/da-okazaki/react-amplify-storage/blob/master/instagram.png)
 
-## Available Scripts
+## Getting started
+##### Create a new React app:
 
-In the project directory, you can run:
+```
+$ create-react-app react-amplify-storage
+$ cd react-amplify-storage
+```
+##### Install the Amplify libraries:
 
-### `npm start`
+```
+$ npm install aws-amplify aws-amplify-react
+```
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+##### Initialize a new amplify app:
+```
+$ amplify init
+```
+```
+? Enter a name for the project react-amplify
+? Enter a name for the environment develop
+? Choose your default editor: Vim (via Terminal, Mac OS only)
+? Choose the type of app that you're building javascript
+Please tell us about your project
+? What javascript framework are you using react
+? Source Directory Path:  src
+? Distribution Directory Path: build
+? Build Command:  npm run-script build
+? Start Command: npm run-script start
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+#####  Next, add auth:
+```
+$ amplify add auth
+```
+```
+? Do you want to use the default authentication and security configuration? Default configuration
+? How do you want users to be able to sign in? Username
+? Do you want to configure advanced settings? No
+```
 
-### `npm test`
+##### Next, add storage:
+```
+$ amplify add storage
+```
+```
+? Please select from one of the below mentioned services: Content
+? Please provide a friendly name for your resource that will be used to label this category in the project: <resource_name>
+? Please provide bucket name: <unique_bucket_name>
+? Who should have access: Auth and guest users
+? What kind of access do you want for Authenticated users? create, update, read, delete
+? What kind of access do you want for Guest users? create, update, read, delete
+? Do you want to add a Lambda Trigger for your S3 Bucket? N
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Configure the React app with Amplify
+##### Open src/index.js and add the following three lines of code:
 
-### `npm run build`
+```
+// src/index.js
+import Amplify from 'aws-amplify'
+import config from './aws-exports'
+Amplify.configure(config)
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Platform specific components
+##### Open src/App.js and add the following three lines of code:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### S3 Image
+```
+import React, { Component } from 'react';
+import './App.css';
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+import { withAuthenticator, PhotoPicker, S3Image, S3Album } from 'aws-amplify-react';
+import Amplify,{ Storage, Auth } from 'aws-amplify' 
 
-### `npm run eject`
+import config from "./aws-exports";
+Amplify.configure(config)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+class App extends Component {
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  render() {
+    return (
+      <div>
+        <button onClick={() => Auth.signOut()}>サインアウト</button>
+          <PhotoPicker preview onPick={data =>{ 
+            const { file } = data;
+            Storage.put(file.name, file,{
+              level: 'public',  // level : public or private
+              contentType: file.type
+            })
+            .then (result => console.log(result)) 
+            .catch(err => console.log(err));
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+          }
+        } onLoad={dataURL => console.log(dataURL)} />
+      </div>
+    )
+  }
+}
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+export default withAuthenticator(App);
+```
