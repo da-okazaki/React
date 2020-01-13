@@ -1,4 +1,4 @@
-![](https://github.com/da-okazaki/react-amplify-storage/blob/master/instagram.png)
+![](https://github.com/da-okazaki/react-amplify-storage/blob/master/amplify_react.png)
 
 ## Getting started
 ##### Create a new React app:
