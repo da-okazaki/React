@@ -3,21 +3,21 @@
 ## Getting started
 ##### Create a new React app:
 
-```
+```bash
 $ create-react-app react-amplify-storage
 $ cd react-amplify-storage
 ```
 ##### Install the Amplify libraries:
 
-```
+```bash
 $ npm install aws-amplify aws-amplify-react
 ```
 
 ##### Initialize a new amplify app:
-```
+```bash
 $ amplify init
 ```
-```
+```bash
 ? Enter a name for the project react-amplify
 ? Enter a name for the environment develop
 ? Choose your default editor: Vim (via Terminal, Mac OS only)
@@ -31,20 +31,20 @@ Please tell us about your project
 ```
 
 #####  Next, add auth:
-```
+```bash
 $ amplify add auth
 ```
-```
+```bash
 ? Do you want to use the default authentication and security configuration? Default configuration
 ? How do you want users to be able to sign in? Username
 ? Do you want to configure advanced settings? No
 ```
 
 ##### Next, add storage:
-```
+```bash
 $ amplify add storage
 ```
-```
+```bash
 ? Please select from one of the below mentioned services: Content
 ? Please provide a friendly name for your resource that will be used to label this category in the project: <resource_name>
 ? Please provide bucket name: <unique_bucket_name>
@@ -57,7 +57,7 @@ $ amplify add storage
 ### Configure the React app with Amplify
 ##### Open src/index.js and add the following three lines of code:
 
-```
+```JavaScript
 // src/index.js
 import Amplify from 'aws-amplify'
 import config from './aws-exports'
@@ -68,7 +68,7 @@ Amplify.configure(config)
 ##### Open src/App.js and add the following three lines of code:
 
 ### S3 Image
-```
+```JavaScript
 import React, { Component } from 'react';
 import './App.css';
 
